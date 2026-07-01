@@ -1,5 +1,7 @@
 C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\command\migration\CreateCommand.java
 C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\command\migration\MigrationCommand.java
+C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\finder\MigrationDirectoryFinder.java
+C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\finder\ProjectRootFinder.java
 C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\FlygenApplication.java
 C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\FlygenCommand.java
 C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\generator\FilenameGenerator.java
