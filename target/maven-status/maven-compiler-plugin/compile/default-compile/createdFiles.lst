@@ -1,0 +1,5 @@
+com\adzli\flygen\command\migration\CreateCommand.class
+com\adzli\flygen\FlygenApplication.class
+com\adzli\flygen\FlygenCommand.class
+com\adzli\flygen\command\migration\MigrationCommand.class
+com\adzli\flygen\service\MigrationService.class
