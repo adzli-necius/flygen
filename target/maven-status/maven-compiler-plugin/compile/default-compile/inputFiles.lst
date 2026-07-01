@@ -2,4 +2,7 @@ C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\com
 C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\command\migration\MigrationCommand.java
 C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\FlygenApplication.java
 C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\FlygenCommand.java
-C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\service\MigrationService.java
+C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\generator\FilenameGenerator.java
+C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\generator\FlyWayVersionGenerator.java
+C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\generator\MigrationGenerator.java
+C:\Projects\Development\CliTool\flygen\flygen\src\main\java\com\adzli\flygen\writer\MigrationWriter.java

@@ -1,6 +1,6 @@
 package com.adzli.flygen.command.migration;
 
-import com.adzli.flygen.service.MigrationService;
+import com.adzli.flygen.generator.MigrationGenerator;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -9,7 +9,7 @@ import picocli.CommandLine;
 )
 public class CreateCommand implements Runnable {
 
-    private final MigrationService migrationService = new MigrationService();
+    private final MigrationGenerator migrationGenerator = new MigrationGenerator();
 
     @CommandLine.Parameters(index = "0")
     private String migrationName;
@@ -17,6 +17,6 @@ public class CreateCommand implements Runnable {
     @Override
     public void run() {
 
-        migrationService.createMigration(migrationName);
+        migrationGenerator.generate(migrationName);
     }
 }

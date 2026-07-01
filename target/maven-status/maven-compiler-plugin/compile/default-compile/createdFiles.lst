@@ -1,5 +1,8 @@
 com\adzli\flygen\command\migration\CreateCommand.class
+com\adzli\flygen\generator\FlyWayVersionGenerator.class
 com\adzli\flygen\FlygenApplication.class
+com\adzli\flygen\generator\MigrationGenerator.class
+com\adzli\flygen\generator\FilenameGenerator.class
+com\adzli\flygen\writer\MigrationWriter.class
 com\adzli\flygen\FlygenCommand.class
 com\adzli\flygen\command\migration\MigrationCommand.class
-com\adzli\flygen\service\MigrationService.class
