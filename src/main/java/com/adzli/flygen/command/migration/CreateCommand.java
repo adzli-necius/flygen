@@ -15,7 +15,7 @@ public class CreateCommand implements Runnable {
     private String migrationName;
 
     @Override
-    public void run() {
+    public void run()  {
 
         migrationGenerator.generate(migrationName);
     }
