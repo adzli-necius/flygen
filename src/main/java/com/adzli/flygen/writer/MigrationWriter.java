@@ -6,7 +6,10 @@ import java.nio.file.Path;
 
 public class MigrationWriter {
 
-    public void write(String filename) throws IOException {
-        Files.createFile(Path.of(filename));
+    public Path write(Path migrationDirectory, String filename) throws IOException {
+        Files.createDirectories(migrationDirectory);
+
+        Path migrationFile = migrationDirectory.resolve(filename);
+        return Files.createFile(migrationFile);
     }
 }

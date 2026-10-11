@@ -1,13 +1,18 @@
 package com.adzli.flygen;
 
 import picocli.CommandLine;
-import java.util.Arrays;
 
 public class FlygenApplication {
 
     public static void main(String[] args) {
 
-        int exitCode = new CommandLine(new FlygenCommand()).execute(args);
+        CommandLine commandLine = new CommandLine(new FlygenCommand());
+        commandLine.setExecutionExceptionHandler((exception, command, parseResult) -> {
+            command.getErr().println(exception.getMessage());
+            return command.getCommandSpec().exitCodeOnExecutionException();
+        });
+
+        int exitCode = commandLine.execute(args);
         System.exit(exitCode);
     }
 }

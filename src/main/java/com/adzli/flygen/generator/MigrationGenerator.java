@@ -6,38 +6,48 @@ import com.adzli.flygen.writer.MigrationWriter;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
-import static java.nio.file.Files.find;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 public class MigrationGenerator {
 
-    private final FlyWayVersionGenerator flyWayVersionGenerator = new FlyWayVersionGenerator();
-    private final FilenameGenerator filenameGenerator = new FilenameGenerator();
-    private final MigrationWriter migrationWriter = new MigrationWriter();
-    private final ProjectRootFinder projectRootFinder = new ProjectRootFinder();
-    private final MigrationDirectoryFinder migrationDirectoryFinder = new MigrationDirectoryFinder();
+    private final FlyWayVersionGenerator flyWayVersionGenerator;
+    private final FilenameGenerator filenameGenerator;
+    private final MigrationWriter migrationWriter;
+    private final Supplier<Path> projectRootSupplier;
+    private final MigrationDirectoryFinder migrationDirectoryFinder;
 
+    public MigrationGenerator() {
+        this(
+                new FlyWayVersionGenerator(),
+                new FilenameGenerator(),
+                new MigrationWriter(),
+                new ProjectRootFinder()::find,
+                new MigrationDirectoryFinder()
+        );
+    }
 
-    public void generate(String migrationName) {
+    MigrationGenerator(
+            FlyWayVersionGenerator flyWayVersionGenerator,
+            FilenameGenerator filenameGenerator,
+            MigrationWriter migrationWriter,
+            Supplier<Path> projectRootSupplier,
+            MigrationDirectoryFinder migrationDirectoryFinder
+    ) {
+        this.flyWayVersionGenerator = Objects.requireNonNull(flyWayVersionGenerator);
+        this.filenameGenerator = Objects.requireNonNull(filenameGenerator);
+        this.migrationWriter = Objects.requireNonNull(migrationWriter);
+        this.projectRootSupplier = Objects.requireNonNull(projectRootSupplier);
+        this.migrationDirectoryFinder = Objects.requireNonNull(migrationDirectoryFinder);
+    }
 
-        try {
-            String version = flyWayVersionGenerator.generate();
+    public Path generate(String migrationName) throws IOException {
+        String version = flyWayVersionGenerator.generate();
+        String filename = filenameGenerator.generate(version, migrationName);
 
-            String filename = filenameGenerator.generate(version,migrationName);
+        Path projectRoot = projectRootSupplier.get();
+        Path migrationDirectory = migrationDirectoryFinder.find(projectRoot);
 
-            Path projectRoot = projectRootFinder.find();
-            Path migrationDirectory = migrationDirectoryFinder.find(projectRoot);
-
-            migrationWriter.write(filename);
-
-            System.out.println("Project Root :" + projectRoot);
-            System.out.println("Migration Directory :" + migrationDirectory);
-            System.out.println("Migration created: " + filename);
-
-
-        } catch (IOException e) {
-            System.err.println("Failed to create migration: " + e.getMessage());
-        }
-
+        return migrationWriter.write(migrationDirectory, filename);
     }
 }
