@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: Apache-2.0
+ * Copyright 2026 adzli-necius
+ */
 package com.adzli.flygen;
 
 import com.adzli.flygen.command.migration.MigrationCommand;

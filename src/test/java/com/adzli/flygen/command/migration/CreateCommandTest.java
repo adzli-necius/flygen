@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: Apache-2.0
+ * Copyright 2026 adzli-necius
+ */
 package com.adzli.flygen.command.migration;
 
 import com.adzli.flygen.FlygenCommand;
@@ -24,7 +27,7 @@ class CreateCommandTest {
     void returnsSoftwareExitCodeWhenMigrationCreationFails() {
         CreateCommand command = new CreateCommand(new MigrationGenerator() {
             @Override
-            public Path generate(String migrationName) throws IOException {
+            public Path generate(String migrationName, String migrationLocation) throws IOException {
                 throw new IOException("disk is unavailable");
             }
         });

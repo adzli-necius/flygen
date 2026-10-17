@@ -1,6 +1,6 @@
 # FlyGen
 
-FlyGen is a small Java CLI utility for generating Flyway migration filenames and creating SQL migration files for a Spring or Java project.
+FlyGen is a Java 21 CLI utility for generating Flyway migration filenames and creating empty SQL migration files in Maven projects.
 
 ## Overview
 
@@ -11,6 +11,14 @@ V20261011123456789__create_users_table.sql
 ```
 
 The CLI is intentionally minimal and focuses on one action: creating a migration file from a descriptive migration name.
+
+Run FlyGen from a Maven project root containing `pom.xml`. The default migration location is `src/main/resources/db/migration`; override it with a project-relative location when required:
+
+```bash
+java -jar target/flygen-1.0.0.jar migration create add_users_table --location database/migrations
+```
+
+Absolute locations and locations that escape the project root are rejected. FlyGen never overwrites an existing migration file.
 
 ## Requirements
 
@@ -72,9 +80,11 @@ The project currently does the following:
 src/main/resources/db/migration
 ```
 
-5. Attempts to create the SQL file.
+5. Validates that the working directory is a Maven project root containing `pom.xml`.
+6. Creates the requested migration directory when it does not exist.
+7. Creates the SQL file atomically in the resolved migration directory.
 
-The directory logic is implemented in the finder classes, but the actual write operation currently creates the file in the working directory rather than in the resolved Flyway migration directory.
+Migration names must start with a letter or number and may otherwise contain letters, numbers, underscores, and hyphens. A duplicate migration is rejected rather than overwritten.
 
 ## Project structure
 
@@ -127,7 +137,7 @@ Coordinates the generation flow: version, filename, project root, migration dire
 Creates Flyway-compliant migration file names.
 
 ### FlyWayVersionGenerator
-Generates a timestamp-based version number.
+Generates a timestamp-based version number in `yyyyMMddHHmmssSSS` format.
 
 ### MigrationWriter
 Performs file creation.
@@ -137,13 +147,17 @@ Resolve the working project root and the expected migration directory path.
 
 ## Notes
 
-This project is a lightweight starter tool and is useful as a base for expanding into richer migration management features, such as:
+Exit codes: `0` means success; `1` means a runtime failure such as an unsupported project, duplicate migration, or inaccessible migration directory; and `2` means invalid arguments or a validation failure.
 
-- creating the migration directory if it does not exist,
-- writing to the correct Flyway folder,
-- validating project roots,
-- supporting configurable migration locations,
-- adding tests for generation behavior.
+Run `mvn verify` before opening a pull request. GitHub Actions runs this verification on Windows, macOS, and Linux. Dependabot checks Maven and GitHub Actions dependencies monthly.
+
+For a release, update `CHANGELOG.md` and the Maven version, run `mvn verify`, create an annotated tag (for example `v1.0.0`), then publish the executable JAR from `target/`.
+
+FlyGen does not connect to a database, execute SQL, or modify existing migration files. Review generated SQL before applying it.
+
+## License
+
+Copyright 2026 adzli-necius. FlyGen is licensed under the [Apache License 2.0](LICENSE). See [NOTICE](NOTICE) for bundled-runtime attribution notices.
 
 ## Example
 
