@@ -67,4 +67,24 @@ class MigrationGeneratorTest {
 
         assertTrue(exception.getMessage().startsWith("Migration already exists:"));
     }
+
+    @Test
+    void writesMigrationTemplateContent() throws Exception {
+        MigrationGenerator generator = new MigrationGenerator(
+                new FlyWayVersionGenerator() {
+                    @Override
+                    public String generate() {
+                        return "20261011120000001";
+                    }
+                },
+                new FilenameGenerator(),
+                new MigrationWriter(),
+                () -> projectRoot,
+                new MigrationDirectoryFinder()
+        );
+
+        Path migrationFile = generator.generate("alter_users_table", "db/migration", "-- Alters users_table.\n");
+
+        assertEquals("-- Alters users_table.\n", Files.readString(migrationFile));
+    }
 }

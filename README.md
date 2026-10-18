@@ -1,6 +1,6 @@
 # FlyGen
 
-FlyGen is a Java 21 CLI utility for generating Flyway migration filenames and creating empty SQL migration files in Maven projects.
+FlyGen is a Java 17+ CLI utility for generating Flyway migration filenames and creating SQL migration files with action-specific starter comments in Maven projects.
 
 ## Overview
 
@@ -10,7 +10,7 @@ The tool is built with Java 21 and uses PicoCLI to expose a simple command-line 
 V20261011123456789__create_users_table.sql
 ```
 
-The CLI is intentionally minimal and focuses on one action: creating a migration file from a descriptive migration name.
+The CLI creates versioned migration files for common migration intents: creating, altering, dropping schema objects, and adding or updating data.
 
 Run FlyGen from a Maven project root containing `pom.xml`. The default migration location is `src/main/resources/db/migration`; override it with a project-relative location when required:
 
@@ -22,8 +22,12 @@ Absolute locations and locations that escape the project root are rejected. FlyG
 
 ## Requirements
 
-- Java 21+
+- Java 17+
 - Maven 3.9+
+
+For step-by-step installation and usage instructions, see [USER_MANUAL.md](USER_MANUAL.md).
+
+Windows release ZIPs include `flygen.cmd`; keep it beside the JAR and run it from a Maven project root.
 
 ## Build
 
@@ -48,6 +52,16 @@ Create a migration:
 ```bash
 java -jar target/flygen-1.0.0.jar migration create create_users_table
 ```
+
+Use action-oriented commands to make the migration history easier to read:
+
+```bash
+java -jar target/flygen-1.0.0.jar migration alter users_table
+java -jar target/flygen-1.0.0.jar migration drop legacy_users_table
+java -jar target/flygen-1.0.0.jar migration data seed_roles
+```
+
+These commands generate names such as `__alter_users_table.sql` and add an SQL comment template. FlyGen never connects to or changes a database.
 
 The command expects a required argument:
 

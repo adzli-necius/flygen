@@ -9,7 +9,10 @@ import picocli.CommandLine;
         name = "migration",
         description = "Migration commands",
         subcommands = {
-                CreateCommand.class
+                CreateCommand.class,
+                AlterCommand.class,
+                DropCommand.class,
+                DataCommand.class
         }
 )
 public class MigrationCommand implements Runnable{

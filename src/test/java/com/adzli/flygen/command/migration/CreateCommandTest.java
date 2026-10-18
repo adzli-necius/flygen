@@ -5,6 +5,7 @@ package com.adzli.flygen.command.migration;
 
 import com.adzli.flygen.FlygenCommand;
 import com.adzli.flygen.generator.MigrationGenerator;
+import com.adzli.flygen.generator.MigrationTemplateGenerator;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
@@ -25,12 +26,17 @@ class CreateCommandTest {
 
     @Test
     void returnsSoftwareExitCodeWhenMigrationCreationFails() {
-        CreateCommand command = new CreateCommand(new MigrationGenerator() {
+        MigrationActionCommand command = new MigrationActionCommand(
+                MigrationAction.CREATE,
+                new MigrationGenerator() {
             @Override
-            public Path generate(String migrationName, String migrationLocation) throws IOException {
+            public Path generate(String migrationName, String migrationLocation, String contents) throws IOException {
                 throw new IOException("disk is unavailable");
             }
-        });
+        },
+                new MigrationTemplateGenerator()
+        ) {
+        };
 
         CommandLine commandLine = new CommandLine(command);
         commandLine.setExecutionExceptionHandler((exception, parsedCommand, parseResult) -> CommandLine.ExitCode.SOFTWARE);
