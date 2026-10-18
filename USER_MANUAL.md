@@ -43,10 +43,10 @@ target/flygen-1.0.0.jar
 
 ## 3. Check that FlyGen works
 
-Run:
+After adding FlyGen to your `Path`, run:
 
 ```bash
-java -jar flygen-1.0.0.jar --help
+flygen --help
 ```
 
 You should see the FlyGen command help.
@@ -62,7 +62,7 @@ If a friend sends you the FlyGen release ZIP:
 
 ```powershell
 & "C:\Tools\FlyGen\flygen.cmd" --help
-& "C:\Tools\FlyGen\flygen.cmd" migration create create_users_table
+& "C:\Tools\FlyGen\flygen.cmd" migration create users_table
 ```
 
 The second command creates the migration in the Maven project you opened PowerShell in, not in `C:\Tools\FlyGen`.
@@ -71,7 +71,7 @@ To make `flygen` work like the `java` command, add `C:\Tools\FlyGen` to the Wind
 
 ```powershell
 flygen --help
-flygen migration create create_users_table
+flygen migration create users_table
 ```
 
 ## 4. Create your first migration
@@ -81,16 +81,16 @@ Open a terminal in the root of the Maven project that needs the migration. The c
 Run:
 
 ```bash
-java -jar path/to/flygen-1.0.0.jar migration create create_users_table
+flygen migration create users_table
 ```
 
 On Windows, an example is:
 
 ```powershell
-java -jar C:\Tools\flygen-1.0.0.jar migration create create_users_table
+flygen migration create users_table
 ```
 
-FlyGen creates an empty SQL file in the default Flyway location:
+FlyGen creates a SQL file with a starter comment in the default Flyway location:
 
 ```text
 src/main/resources/db/migration/
