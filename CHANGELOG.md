@@ -6,6 +6,8 @@ All notable changes to FlyGen are documented in this file.
 
 ### Added
 
+- Action-oriented migration commands: `create`, `alter`, `drop`, and `data`.
+- Action-specific SQL starter comments in generated migration files.
 - Apache-2.0 license and bundled-runtime attribution notices.
 - Configurable project-relative migration locations through `--location`.
 - Maven project-root verification.
@@ -13,6 +15,7 @@ All notable changes to FlyGen are documented in this file.
 
 ### Changed
 
+- Java 17 is now the compilation baseline; the CLI supports Java 17 through 21.
 - Migration versions remain timestamp-based: `yyyyMMddHHmmssSSS`.
 - Clear errors and non-zero exit codes for invalid projects, unsafe locations, duplicate migrations, and inaccessible locations.
 

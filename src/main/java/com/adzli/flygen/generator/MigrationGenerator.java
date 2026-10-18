@@ -44,6 +44,10 @@ public class MigrationGenerator {
     }
 
     public Path generate(String migrationName, String migrationLocation) throws IOException {
+        return generate(migrationName, migrationLocation, "");
+    }
+
+    public Path generate(String migrationName, String migrationLocation, String contents) throws IOException {
         String version = flyWayVersionGenerator.generate();
         String filename = filenameGenerator.generate(version, migrationName);
 
@@ -51,7 +55,7 @@ public class MigrationGenerator {
         Path migrationDirectory = migrationDirectoryFinder.find(projectRoot, migrationLocation);
 
         try {
-            return migrationWriter.write(migrationDirectory, filename);
+            return migrationWriter.write(migrationDirectory, filename, contents);
         } catch (java.nio.file.FileAlreadyExistsException e) {
             throw new IOException("Migration already exists: " + e.getFile(), e);
         } catch (java.nio.file.AccessDeniedException e) {

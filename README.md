@@ -1,31 +1,35 @@
 # FlyGen
 
-FlyGen is a Java 21 CLI utility for generating Flyway migration filenames and creating empty SQL migration files in Maven projects.
+FlyGen is a Java 17+ CLI utility for generating Flyway migration filenames and creating SQL migration files with action-specific starter comments in Maven projects.
 
 ## Overview
 
-The tool is built with Java 21 and uses PicoCLI to expose a simple command-line interface. Its main purpose is to generate Flyway-style migration names such as:
+The tool is built with Java 17+ and uses PicoCLI to expose a simple command-line interface. Its main purpose is to generate Flyway-style migration names such as:
 
 ```text
 V20261011123456789__create_users_table.sql
 ```
 
-The CLI is intentionally minimal and focuses on one action: creating a migration file from a descriptive migration name.
+The CLI creates versioned migration files for common migration intents: creating, altering, dropping schema objects, and adding or updating data.
 
 Run FlyGen from a Maven project root containing `pom.xml`. The default migration location is `src/main/resources/db/migration`; override it with a project-relative location when required:
 
 ```bash
-java -jar target/flygen-1.0.0.jar migration create add_users_table --location database/migrations
+flygen migration create users_table --location database/migrations
 ```
 
 Absolute locations and locations that escape the project root are rejected. FlyGen never overwrites an existing migration file.
 
 ## Requirements
 
-- Java 21+
-- Maven 3.9+
+- Java 17+
+- Maven 3.9+ only when building FlyGen from source
 
-## Build
+For step-by-step installation and usage instructions, see [USER_MANUAL.md](USER_MANUAL.md).
+
+Windows release ZIPs include `flygen.cmd`; keep it beside the JAR and run it from a Maven project root.
+
+## Build from source
 
 From the project root:
 
@@ -35,36 +39,66 @@ mvn package
 
 This creates an executable JAR in `target/`.
 
+## Install on Windows
+
+The Windows release ZIP includes `flygen.cmd` and `flygen-1.0.0.jar`.
+
+1. Extract both files to a permanent folder, such as `C:\tools\flygen`.
+2. Add `C:\tools\flygen` to your Windows `Path` environment variable.
+3. Open a new terminal and confirm the installation:
+
+```powershell
+flygen --version
+```
+
+After this one-time setup, use `flygen` from any Maven project root without typing a JAR path.
+
 ## Usage
 
 Show the application help:
 
 ```bash
-java -jar target/flygen-1.0.0.jar --help
+flygen --help
 ```
 
 Create a migration:
 
 ```bash
-java -jar target/flygen-1.0.0.jar migration create create_users_table
+flygen migration create users_table
 ```
 
-The command expects a required argument:
-
-```text
-<migrationName>
-```
-
-Example:
+Use action-oriented commands to make the migration history easier to read:
 
 ```bash
-java -jar target/flygen-1.0.0.jar migration create add_users_table
+flygen migration alter users_table
+flygen migration drop legacy_users_table
+flygen migration data seed_roles
 ```
 
-This generates a file name similar to:
+These commands generate names such as `__alter_users_table.sql` and add an SQL comment template. FlyGen never connects to or changes a database.
+
+Run FlyGen from a Maven project root containing `pom.xml`. The default migration location is:
 
 ```text
-V20261011123456789__add_users_table.sql
+src/main/resources/db/migration
+```
+
+Use a project-relative custom location when required:
+
+```bash
+flygen migration create users_table --location database/migrations
+```
+
+If FlyGen is not installed on `Path`, run the JAR directly instead:
+
+```powershell
+java -jar C:\tools\flygen\flygen-1.0.0.jar migration create users_table
+```
+
+Each command generates a timestamped filename similar to:
+
+```text
+V20261018110000000__create_users_table.sql
 ```
 
 ## Current implementation details
@@ -72,17 +106,16 @@ V20261011123456789__add_users_table.sql
 The project currently does the following:
 
 1. Generates a timestamp-based Flyway version using the current time.
-2. Creates a migration filename in the form `V<timestamp>__<migrationName>.sql`.
-3. Resolves the current working directory as the project root.
-4. Resolves a migration directory path as:
+2. Creates a migration filename in the form `V<timestamp>__<action>_<target>.sql`.
+3. Resolves a migration directory path as:
 
 ```text
 src/main/resources/db/migration
 ```
 
-5. Validates that the working directory is a Maven project root containing `pom.xml`.
-6. Creates the requested migration directory when it does not exist.
-7. Creates the SQL file atomically in the resolved migration directory.
+4. Validates that the working directory is a Maven project root containing `pom.xml`.
+5. Creates the requested migration directory when it does not exist.
+6. Creates the SQL file atomically in the resolved migration directory.
 
 Migration names must start with a letter or number and may otherwise contain letters, numbers, underscores, and hyphens. A duplicate migration is rejected rather than overwritten.
 
@@ -127,8 +160,8 @@ Defines the root command (`flygen`) and registers the `migration` subcommand.
 ### MigrationCommand
 Groups migration-related commands.
 
-### CreateCommand
-Accepts a migration name parameter and triggers generation.
+### Migration action commands
+`create`, `alter`, `drop`, and `data` accept a target name, generate a consistently named migration file, and add an action-specific SQL comment.
 
 ### MigrationGenerator
 Coordinates the generation flow: version, filename, project root, migration directory, and file creation.
@@ -158,21 +191,3 @@ FlyGen does not connect to a database, execute SQL, or modify existing migration
 ## License
 
 Copyright 2026 adzli-necius. FlyGen is licensed under the [Apache License 2.0](LICENSE). See [NOTICE](NOTICE) for bundled-runtime attribution notices.
-
-## Example
-
-```bash
-java -jar target/flygen-1.0.0.jar migration create add_users_table
-```
-
-Generates a file like:
-
-```text
-V20261011123456789__add_users_table.sql
-```
-
-and is intended to fit a Flyway folder structure such as:
-
-```text
-src/main/resources/db/migration/
-```

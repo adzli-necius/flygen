@@ -29,6 +29,18 @@ class MigrationWriterTest {
     }
 
     @Test
+    void writesProvidedSqlTemplate() throws Exception {
+        Path migrationDirectory = temporaryDirectory.resolve("migration");
+        Path migrationFile = new MigrationWriter().write(
+                migrationDirectory,
+                "V1__alter_users.sql",
+                "-- Alters users." + System.lineSeparator()
+        );
+
+        assertEquals("-- Alters users." + System.lineSeparator(), Files.readString(migrationFile));
+    }
+
+    @Test
     void failsWithoutOverwritingWhenMigrationAlreadyExists() throws Exception {
         Path migrationDirectory = temporaryDirectory.resolve("migration");
         MigrationWriter writer = new MigrationWriter();
